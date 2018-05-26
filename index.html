@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>渲染页面</title>
+        <style>
+            *{
+                padding:0;
+                margin: 0;
+            }
+            .list{
+                list-style: none;
+                width: 224px;
+                position: relative;
+                left: 100px;
+                background: #f00;
+                width: 1200px;
+            }
+            .list li{
+                margin-left: 20px;
+                float: left;
+                overflow: hidden;
+                margin-bottom:20px; 
+            }
+            .list li img{
+                width: 224px;
+                height: 340px;
+            }
+            .price{
+                color:#f36;
+                display: block;
+                height: 30px;
+                line-height: 30px;
+            }
+            .tip a{
+                text-decoration: none;
+                font: 14px "微软雅黑";
+                color: #666;
+            }
+            .tip a:hover{
+                color: #f36;
+            }
+            .tip button{
+                background: #f36;
+                border:0;
+                cursor: pointer;
+                border-radius:10%; 
+                color: #fff;
+                width: 50px;
+                height: 20px;
+                margin-right: 10px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <ul class="list">
+        </ul>
+        
+
+    	
+        <script src="libs/jquery-3.3.1.js"></script>
+        <script type="text/javascript">
+             $(function(){
+                    $.ajax({
+                        async : true,
+                        url : "http://mce.meilishuo.com/jsonp/get/3?offset=0&frame=1&trace=0&limit=10&endId=0&pid=106888&_=1526528205879",
+                        type : "GET",
+                        dataType : "jsonp", // 返回的数据类型，设置为JSONP方式
+                        jsonp : 'callback', //指定一个查询参数名称来覆盖默认的 jsonp 回调参数名 callback
+                        jsonpCallback: 'handleResponse', //设置回调函数名
+                        data : {
+                            q : "javascript", 
+                            count : 1
+                        }, 
+                        success: function(responseText){
+                            var json=responseText.data.list;
+                            new RenderPage(".list",json,".tip a span");
+                        }
+                    });
+            });
+
+            function RenderPage(ele,json,ele2){
+                this.ele=$(ele);
+                this.subEle=$(ele2);
+                this.json=json;
+                this.init();
+            }
+            RenderPage.prototype={
+                constructor:RenderPage,
+                init(){
+                    this.render(this.json);
+                },
+                render(json){
+                    var html="";
+                    for(var i=0;i<json.length;i++){    
+                                html+=`<li>
+                                           <img src="${json[i].image}">
+                                           <div class="tip">
+                                               <span class="price">${"￥"+json[i].price}</span>
+                                               <a href="#"><button>${json[i].item_id}</button><span>${json[i].title.substr(0,10)+""}</span></a>
+                                           </div>
+                                       </li>`;   
+                            }
+                    this.ele.html(html);
+                }
+            }
+            
+        </script>
+
+        
+            
+
+
+
+		
+        
+        	
+            
+           
+    </body>
+
+</html>
